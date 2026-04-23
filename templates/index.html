@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{{ settings.site_name }} — Social Media Marketing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --pink: #e91e8c;
+      --purple: #7b2ff7;
+      --dark: #0f0f1a;
+      --card: #1a1a2e;
+      --text: #e0e0f0;
+      --muted: #888aaa;
+      --grad: linear-gradient(135deg, #e91e8c, #7b2ff7);
+    }
+
+    body { font-family: 'Poppins', sans-serif; background: var(--dark); color: var(--text); overflow-x: hidden; }
+
+    /* ─── NAV ─────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2rem;
+      background: rgba(15,15,26,.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .logo { font-size: 1.4rem; font-weight: 800; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .nav-links a { color: var(--muted); text-decoration: none; margin-left: 1.8rem; font-size: .9rem; transition: color .2s; }
+    .nav-links a:hover { color: #fff; }
+    .nav-cta {
+      background: var(--grad); color: #fff; border: none; padding: .55rem 1.4rem;
+      border-radius: 50px; font-size: .9rem; font-weight: 600; cursor: pointer;
+      transition: opacity .2s;
+    }
+    .nav-cta:hover { opacity: .85; }
+
+    /* ─── HERO ────────────────────────────────────── */
+    .hero {
+      min-height: 92vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 4rem 1.5rem;
+      background: radial-gradient(ellipse at 50% 0%, rgba(123,47,247,.25) 0%, transparent 65%);
+    }
+    .badge {
+      display: inline-block; background: rgba(233,30,140,.15); color: #e91e8c;
+      border: 1px solid rgba(233,30,140,.35); border-radius: 50px;
+      padding: .35rem 1rem; font-size: .8rem; font-weight: 600; margin-bottom: 1.5rem; letter-spacing: .04em;
+    }
+    .hero h1 { font-size: clamp(2.2rem, 6vw, 4.2rem); font-weight: 800; line-height: 1.15; max-width: 780px; }
+    .hero h1 span { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { color: var(--muted); font-size: 1.1rem; max-width: 560px; margin: 1.2rem auto 2.2rem; line-height: 1.7; }
+    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+    .btn-primary {
+      background: var(--grad); color: #fff; border: none;
+      padding: .85rem 2rem; border-radius: 50px; font-size: 1rem; font-weight: 600;
+      cursor: pointer; transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 8px 32px rgba(233,30,140,.35);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(233,30,140,.5); }
+    .btn-ghost {
+      background: transparent; color: #fff;
+      border: 1px solid rgba(255,255,255,.2);
+      padding: .85rem 2rem; border-radius: 50px; font-size: 1rem; font-weight: 500;
+      cursor: pointer; transition: border-color .2s, background .2s;
+    }
+    .btn-ghost:hover { border-color: var(--pink); background: rgba(233,30,140,.08); }
+
+    /* stats */
+    .stats { display: flex; gap: 3rem; justify-content: center; flex-wrap: wrap; margin-top: 4rem; }
+    .stat-num { font-size: 2.2rem; font-weight: 800; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .stat-label { color: var(--muted); font-size: .85rem; }
+
+    /* ─── SERVICES ────────────────────────────────── */
+    section { padding: 5rem 1.5rem; }
+    .section-label { text-align: center; color: var(--pink); font-size: .85rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .6rem; }
+    .section-title { text-align: center; font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 700; margin-bottom: .8rem; }
+    .section-sub { text-align: center; color: var(--muted); max-width: 520px; margin: 0 auto 3rem; line-height: 1.7; }
+
+    .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; max-width: 1100px; margin: 0 auto; }
+    .service-card {
+      background: var(--card); border: 1px solid rgba(255,255,255,.07);
+      border-radius: 20px; padding: 2rem; transition: transform .25s, border-color .25s;
+    }
+    .service-card:hover { transform: translateY(-6px); border-color: rgba(233,30,140,.4); }
+    .service-icon { font-size: 2.2rem; margin-bottom: 1rem; }
+    .service-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: .5rem; }
+    .service-card p { color: var(--muted); font-size: .9rem; line-height: 1.6; }
+
+    /* ─── HOW IT WORKS ────────────────────────────── */
+    .steps { display: flex; flex-direction: column; gap: 2rem; max-width: 680px; margin: 0 auto; }
+    .step { display: flex; gap: 1.5rem; align-items: flex-start; }
+    .step-num {
+      flex-shrink: 0; width: 48px; height: 48px; border-radius: 50%;
+      background: var(--grad); display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 1.1rem;
+    }
+    .step h4 { font-weight: 600; margin-bottom: .3rem; }
+    .step p { color: var(--muted); font-size: .9rem; line-height: 1.6; }
+
+    /* ─── CTA BANNER ──────────────────────────────── */
+    .cta-banner {
+      background: var(--grad); border-radius: 24px;
+      max-width: 900px; margin: 0 auto;
+      padding: 3.5rem 2rem; text-align: center;
+    }
+    .cta-banner h2 { font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 700; margin-bottom: .8rem; }
+    .cta-banner p { opacity: .9; margin-bottom: 2rem; font-size: 1.05rem; }
+
+    /* ─── FOOTER ──────────────────────────────────── */
+    footer {
+      text-align: center; padding: 2rem;
+      color: var(--muted); font-size: .85rem;
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+    footer a { color: var(--pink); text-decoration: none; }
+
+    /* ─── CHAT WIDGET ─────────────────────────────── */
+    #chat-fab {
+      position: fixed; bottom: 2rem; right: 2rem; z-index: 999;
+      width: 64px; height: 64px; border-radius: 50%;
+      background: var(--grad); border: none; cursor: pointer;
+      box-shadow: 0 8px 32px rgba(233,30,140,.5);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; transition: transform .2s;
+    }
+    #chat-fab:hover { transform: scale(1.1); }
+    .chat-pulse {
+      position: absolute; top: 0; right: 0;
+      width: 18px; height: 18px; background: #00e676; border-radius: 50%;
+      border: 2px solid var(--dark); animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.3);opacity:.7} }
+
+    #chat-window {
+      position: fixed; bottom: 7rem; right: 2rem; z-index: 998;
+      width: min(380px, calc(100vw - 2rem));
+      background: var(--card); border: 1px solid rgba(255,255,255,.1);
+      border-radius: 24px; overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0,0,0,.6);
+      display: none; flex-direction: column;
+      animation: slideUp .25s ease;
+    }
+    @keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+    .chat-header {
+      background: var(--grad); padding: 1.1rem 1.3rem;
+      display: flex; align-items: center; gap: .8rem;
+    }
+    .chat-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(255,255,255,.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; flex-shrink: 0;
+    }
+    .chat-header-info .name { font-weight: 700; font-size: 1rem; }
+    .chat-header-info .status { font-size: .75rem; opacity: .85; }
+    .chat-close { margin-left: auto; background: none; border: none; color: #fff; font-size: 1.4rem; cursor: pointer; opacity: .8; }
+    .chat-close:hover { opacity: 1; }
+
+    #chat-messages {
+      height: 360px; overflow-y: auto; padding: 1rem;
+      display: flex; flex-direction: column; gap: .75rem;
+      scroll-behavior: smooth;
+    }
+    #chat-messages::-webkit-scrollbar { width: 4px; }
+    #chat-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 4px; }
+
+    .msg { max-width: 80%; padding: .7rem 1rem; border-radius: 18px; font-size: .88rem; line-height: 1.5; word-break: break-word; }
+    .msg.bot { background: rgba(255,255,255,.08); border-bottom-left-radius: 4px; align-self: flex-start; }
+    .msg.user { background: var(--grad); color: #fff; border-bottom-right-radius: 4px; align-self: flex-end; }
+    .msg.typing { font-style: italic; opacity: .6; }
+
+    .chat-success {
+      background: rgba(0,230,118,.1); border: 1px solid rgba(0,230,118,.3);
+      color: #00e676; padding: .7rem 1rem; border-radius: 12px;
+      font-size: .82rem; text-align: center; margin: .5rem;
+    }
+
+    .chat-input-row {
+      display: flex; gap: .5rem; padding: .9rem 1rem;
+      border-top: 1px solid rgba(255,255,255,.07);
+      background: rgba(255,255,255,.03);
+    }
+    #chat-input {
+      flex: 1; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1);
+      border-radius: 50px; padding: .6rem 1rem; color: #fff; font-size: .88rem; font-family: inherit;
+      outline: none; transition: border-color .2s;
+    }
+    #chat-input:focus { border-color: var(--pink); }
+    #chat-input::placeholder { color: var(--muted); }
+    #chat-send {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--grad); border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; flex-shrink: 0; transition: opacity .2s;
+    }
+    #chat-send:hover { opacity: .85; }
+    #chat-send:disabled { opacity: .4; cursor: not-allowed; }
+
+    @media(max-width:600px){
+      .nav-links { display: none; }
+      .stats { gap: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">✨ {{ settings.site_name }}</div>
+  <div class="nav-links">
+    <a href="#services">Services</a>
+    <a href="#how">How it Works</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <button class="nav-cta" onclick="openChat()">Get Started Free</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="badge">🚀 Social Media Marketing Expert</div>
+  <h1>{{ settings.tagline | replace("Stunning Reels & Ads", "<span>Stunning Reels & Ads</span>") | safe }}</h1>
+  <p>{{ settings.site_name }} helps businesses and creators build a powerful Instagram presence — from viral reels to high-ROI ad campaigns.</p>
+  <div class="hero-btns">
+    <button class="btn-primary" onclick="openChat()">💬 Chat with AI Assistant</button>
+    <button class="btn-ghost" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">See Services</button>
+  </div>
+  <div class="stats">
+    <div><div class="stat-num">150+</div><div class="stat-label">Happy Clients</div></div>
+    <div><div class="stat-num">500+</div><div class="stat-label">Reels Created</div></div>
+    <div><div class="stat-num">3x</div><div class="stat-label">Avg. Reach Growth</div></div>
+    <div><div class="stat-num">4.9★</div><div class="stat-label">Client Rating</div></div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-label">What I Do</div>
+  <h2 class="section-title">Services Tailored for <span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Your Growth</span></h2>
+  <p class="section-sub">From concept to content — I handle everything so you can focus on your business.</p>
+  <div class="services-grid">
+    {% for svc in settings.services %}
+    <div class="service-card">
+      <div class="service-icon">{{ svc.icon }}</div>
+      <h3>{{ svc.title }}</h3>
+      <p>{{ svc.desc }}</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" style="background:rgba(123,47,247,.05)">
+  <div class="section-label">The Process</div>
+  <h2 class="section-title">Simple. Fast. Effective.</h2>
+  <p class="section-sub">Getting started takes less than 2 minutes.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h4>Chat with Priya (AI Assistant)</h4>
+        <p>Tell our AI assistant about your business and what you need. She'll gather your details in a friendly conversation.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h4>Khusboo Reviews & Reaches Out</h4>
+        <p>Within 24 hours, Khusboo personally reviews your requirements and contacts you on WhatsApp or email.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h4>Strategy Call — Free</h4>
+        <p>A free 30-minute strategy call where we map out a custom plan for your brand's social media growth.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <h4>We Create & You Grow</h4>
+        <p>We take over content creation and management while you watch your followers, reach, and sales grow.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="contact">
+  <div class="cta-banner">
+    <h2>Ready to Stand Out on Instagram?</h2>
+    <p>Chat with our AI assistant now and get a personalised plan within 24 hours.</p>
+    <button class="btn-primary" style="background:rgba(255,255,255,.2);box-shadow:none;border:2px solid rgba(255,255,255,.4)" onclick="openChat()">
+      💬 Start Free Consultation
+    </button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2024 {{ settings.site_name }}. Made with ❤️ for amazing brands. &nbsp;|&nbsp; <a href="/dashboard">Admin</a></p>
+</footer>
+
+<!-- CHAT FAB -->
+<button id="chat-fab" onclick="toggleChat()" title="Chat with us">
+  💬
+  <div class="chat-pulse"></div>
+</button>
+
+<!-- CHAT WINDOW -->
+<div id="chat-window">
+  <div class="chat-header">
+    <div class="chat-avatar">🤖</div>
+    <div class="chat-header-info">
+      <div class="name">Priya — AI Assistant</div>
+      <div class="status">● Online • Replies instantly</div>
+    </div>
+    <button class="chat-close" onclick="toggleChat()">✕</button>
+  </div>
+  <div id="chat-messages"></div>
+  <div class="chat-input-row">
+    <input id="chat-input" type="text" placeholder="Type your message..." autocomplete="off"/>
+    <button id="chat-send" onclick="sendMessage()">➤</button>
+  </div>
+</div>
+
+<script>
+  const sessionId = Math.random().toString(36).slice(2);
+  let chatOpen = false;
+  let started = false;
+  let busy = false;
+
+  function toggleChat() {
+    chatOpen = !chatOpen;
+    const win = document.getElementById('chat-window');
+    win.style.display = chatOpen ? 'flex' : 'none';
+    if (chatOpen && !started) { started = true; startChat(); }
+    if (chatOpen) document.getElementById('chat-input').focus();
+  }
+
+  function openChat() {
+    if (!chatOpen) toggleChat();
+  }
+
+  async function startChat() {
+    showTyping();
+    try {
+      const res = await fetch('/chat', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({session_id: sessionId, message: 'hi'})
+      });
+      const data = await res.json();
+      removeTyping();
+      addMsg(data.message, 'bot');
+    } catch {
+      removeTyping();
+      addMsg('Hi there! 👋 I\'m Priya, Khusboo\'s assistant. What\'s your name?', 'bot');
+    }
+  }
+
+  async function sendMessage() {
+    if (busy) return;
+    const input = document.getElementById('chat-input');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    addMsg(text, 'user');
+    busy = true;
+    document.getElementById('chat-send').disabled = true;
+    showTyping();
+    try {
+      const res = await fetch('/chat', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({session_id: sessionId, message: text})
+      });
+      const data = await res.json();
+      removeTyping();
+      addMsg(data.message, 'bot');
+      if (data.lead_captured) {
+        const box = document.createElement('div');
+        box.className = 'chat-success';
+        box.textContent = '✅ Your details have been saved! Khusboo will reach out within 24 hrs.';
+        document.getElementById('chat-messages').appendChild(box);
+        scroll();
+      }
+    } catch {
+      removeTyping();
+      addMsg('Sorry, something went wrong. Please try again!', 'bot');
+    }
+    busy = false;
+    document.getElementById('chat-send').disabled = false;
+    document.getElementById('chat-input').focus();
+  }
+
+  function addMsg(text, role) {
+    const div = document.createElement('div');
+    div.className = 'msg ' + role;
+    div.textContent = text;
+    document.getElementById('chat-messages').appendChild(div);
+    scroll();
+  }
+
+  function showTyping() {
+    const div = document.createElement('div');
+    div.className = 'msg bot typing';
+    div.id = 'typing-indicator';
+    div.textContent = 'Priya is typing...';
+    document.getElementById('chat-messages').appendChild(div);
+    scroll();
+  }
+
+  function removeTyping() {
+    const el = document.getElementById('typing-indicator');
+    if (el) el.remove();
+  }
+
+  function scroll() {
+    const msgs = document.getElementById('chat-messages');
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  document.getElementById('chat-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') sendMessage();
+  });
+</script>
+
+</body>
+</html>

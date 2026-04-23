@@ -1,0 +1,7 @@
+.env
+__pycache__/
+*.pyc
+leads.json
+settings.json
+ngrok.exe
+*.zip

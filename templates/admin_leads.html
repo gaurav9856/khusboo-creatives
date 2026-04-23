@@ -1,0 +1,106 @@
+{% extends "admin_base.html" %}
+{% block title %}Leads{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
+    <div>
+      <div class="page-title">Your <span>Leads</span></div>
+      <div class="page-sub">All clients who chatted with your AI assistant</div>
+    </div>
+    <a class="btn btn-grad" href="/admin/export/csv">⬇ Export CSV</a>
+  </div>
+</div>
+
+<div class="stats-row">
+  <div class="stat-card"><div class="stat-label">Total Leads</div><div class="stat-val">{{ total }}</div></div>
+  <div class="stat-card"><div class="stat-label">New</div><div class="stat-val">{{ leads | selectattr('status','equalto','new') | list | length }}</div></div>
+  <div class="stat-card"><div class="stat-label">Contacted</div><div class="stat-val">{{ leads | selectattr('status','equalto','contacted') | list | length }}</div></div>
+  <div class="stat-card"><div class="stat-label">Converted</div><div class="stat-val">{{ leads | selectattr('status','equalto','converted') | list | length }}</div></div>
+</div>
+
+<div class="filter-bar">
+  <a class="filter-btn {% if filter=='all' %}active{% endif %}" href="/admin/leads?status=all">All</a>
+  <a class="filter-btn {% if filter=='new' %}active{% endif %}" href="/admin/leads?status=new">🔵 New</a>
+  <a class="filter-btn {% if filter=='contacted' %}active{% endif %}" href="/admin/leads?status=contacted">🟡 Contacted</a>
+  <a class="filter-btn {% if filter=='converted' %}active{% endif %}" href="/admin/leads?status=converted">🟢 Converted</a>
+  <a class="filter-btn {% if filter=='lost' %}active{% endif %}" href="/admin/leads?status=lost">🔴 Lost</a>
+</div>
+
+{% if leads | length == 0 %}
+<div class="card" style="text-align:center;padding:3rem">
+  <div style="font-size:3rem;margin-bottom:1rem">📭</div>
+  <h3 style="margin-bottom:.5rem">No leads yet</h3>
+  <p style="color:var(--muted)">Share your website and clients will start coming in!</p>
+</div>
+{% else %}
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Status</th>
+        <th>Name & Business</th>
+        <th>Contact</th>
+        <th>Instagram</th>
+        <th>Service / Budget</th>
+        <th>Pain Point</th>
+        <th>Time</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for lead in leads %}
+    <tr>
+      <td>
+        {% set s = lead.status or 'new' %}
+        <span class="badge badge-{{s}}">
+          {% if s=='new' %}🔵 New
+          {% elif s=='contacted' %}🟡 Contacted
+          {% elif s=='converted' %}🟢 Converted
+          {% else %}🔴 Lost{% endif %}
+        </span>
+      </td>
+      <td>
+        <div style="font-weight:600">{{ lead.name or '—' }}</div>
+        <div style="color:var(--muted);font-size:.8rem">{{ lead.business or '—' }}</div>
+      </td>
+      <td>
+        {% if lead.phone %}
+        <a class="wa-btn" href="https://wa.me/{{ lead.phone | replace('+','') | replace(' ','') | replace('-','') }}" target="_blank">💬 WhatsApp</a>
+        {% endif %}
+        {% if lead.email %}<div style="color:var(--muted);font-size:.78rem;margin-top:.3rem">{{ lead.email }}</div>{% endif %}
+      </td>
+      <td>
+        {% if lead.instagram and lead.instagram not in ['—','N/A','na','none','no'] %}
+        <a style="color:var(--pink);text-decoration:none;font-size:.85rem" href="https://instagram.com/{{ lead.instagram | replace('@','') }}" target="_blank">@{{ lead.instagram | replace('@','') }}</a>
+        {% else %}—{% endif %}
+      </td>
+      <td>
+        <div><span class="badge badge-service">{{ lead.services or '—' }}</span></div>
+        <div style="margin-top:.3rem"><span class="badge badge-budget">{{ lead.budget or '—' }}</span></div>
+      </td>
+      <td style="max-width:180px;color:var(--muted);font-size:.8rem">{{ lead.pain_point or '—' }}</td>
+      <td style="color:var(--muted);font-size:.78rem;white-space:nowrap">{{ lead.timestamp or '—' }}</td>
+      <td>
+        <div style="display:flex;flex-direction:column;gap:.4rem">
+          <form method="POST" action="/admin/lead/{{ lead.id }}/status">
+            <select name="status" onchange="this.form.submit()" style="font-size:.75rem;padding:.2rem .4rem;border-radius:6px;background:rgba(255,255,255,.06);color:#fff;border:1px solid var(--border)">
+              <option value="new" {% if (lead.status or 'new')=='new' %}selected{% endif %}>New</option>
+              <option value="contacted" {% if lead.status=='contacted' %}selected{% endif %}>Contacted</option>
+              <option value="converted" {% if lead.status=='converted' %}selected{% endif %}>Converted</option>
+              <option value="lost" {% if lead.status=='lost' %}selected{% endif %}>Lost</option>
+            </select>
+          </form>
+          <form method="POST" action="/admin/lead/{{ lead.id }}/delete" onsubmit="return confirm('Delete this lead?')">
+            <button class="btn btn-danger btn-sm" type="submit">🗑 Delete</button>
+          </form>
+        </div>
+      </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+{% endblock %}

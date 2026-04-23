@@ -1,0 +1,169 @@
+{% extends "admin_base.html" %}
+{% block title %}Settings{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div class="page-title">⚙️ <span>Settings</span></div>
+  <div class="page-sub">Edit your website content, contact info, and password</div>
+</div>
+
+{% if msg %}
+<div class="alert alert-{{ msg[0] }}">{{ msg[1] }}</div>
+{% endif %}
+
+<!-- GENERAL SETTINGS -->
+<div class="form-section">
+  <div class="form-section-title">🌐 General Info</div>
+  <form method="POST">
+    <input type="hidden" name="action" value="general"/>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+      <div class="form-group">
+        <label>Business Name</label>
+        <input type="text" name="site_name" value="{{ settings.site_name }}"/>
+      </div>
+      <div class="form-group">
+        <label>Your Email</label>
+        <input type="email" name="email" value="{{ settings.email }}" placeholder="khusboo@email.com"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Hero Tagline (big text on homepage)</label>
+      <input type="text" name="tagline" value="{{ settings.tagline }}"/>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+      <div class="form-group">
+        <label>WhatsApp Number (with country code)</label>
+        <input type="tel" name="whatsapp" value="{{ settings.whatsapp }}" placeholder="+919876543210"/>
+      </div>
+      <div class="form-group">
+        <label>Instagram Handle</label>
+        <input type="text" name="instagram" value="{{ settings.instagram }}" placeholder="@khusboo"/>
+      </div>
+    </div>
+    <button class="btn btn-grad" type="submit">Save Changes</button>
+  </form>
+</div>
+
+<!-- SERVICES -->
+<div class="form-section">
+  <div class="form-section-title">🛠 Services (shown on homepage)</div>
+  <form method="POST" id="svc-form">
+    <input type="hidden" name="action" value="services"/>
+    <div id="services-list">
+    {% for svc in settings.services %}
+    <div class="svc-row" style="display:grid;grid-template-columns:60px 1fr 2fr auto;gap:.7rem;align-items:start;margin-bottom:.8rem;background:rgba(255,255,255,.03);padding:.8rem;border-radius:10px;border:1px solid var(--border)">
+      <div>
+        <label style="font-size:.7rem">Icon</label>
+        <input type="text" name="svc_icon" value="{{ svc.icon }}" style="text-align:center"/>
+      </div>
+      <div>
+        <label style="font-size:.7rem">Title</label>
+        <input type="text" name="svc_title" value="{{ svc.title }}"/>
+      </div>
+      <div>
+        <label style="font-size:.7rem">Description</label>
+        <textarea name="svc_desc" style="min-height:60px">{{ svc.desc }}</textarea>
+      </div>
+      <div style="padding-top:1.5rem">
+        <button type="button" onclick="this.closest('.svc-row').remove()" class="btn btn-danger btn-sm">✕</button>
+      </div>
+    </div>
+    {% endfor %}
+    </div>
+    <div style="display:flex;gap:.8rem;flex-wrap:wrap;margin-top:.5rem">
+      <button type="button" onclick="addService()" class="btn btn-ghost">+ Add Service</button>
+      <button class="btn btn-grad" type="submit">Save Services</button>
+    </div>
+  </form>
+</div>
+
+<!-- ADMIN USERS -->
+<div class="form-section">
+  <div class="form-section-title">👥 Admin Users</div>
+  <form method="POST">
+    <input type="hidden" name="action" value="admins"/>
+    <div id="admins-list">
+    {% for admin in settings.admins %}
+    <div class="admin-row" style="display:grid;grid-template-columns:1fr 1fr 120px auto;gap:.7rem;align-items:end;margin-bottom:.8rem;background:rgba(255,255,255,.03);padding:.8rem;border-radius:10px;border:1px solid var(--border)">
+      <div class="form-group" style="margin:0">
+        <label style="font-size:.7rem">Name</label>
+        <input type="text" name="admin_username" value="{{ admin.username }}"/>
+      </div>
+      <div class="form-group" style="margin:0">
+        <label style="font-size:.7rem">Password</label>
+        <input type="text" name="admin_password" value="{{ admin.password }}"/>
+      </div>
+      <div class="form-group" style="margin:0">
+        <label style="font-size:.7rem">Role</label>
+        <select name="admin_role">
+          <option value="owner" {% if admin.role=='owner' %}selected{% endif %}>Owner</option>
+          <option value="admin" {% if admin.role=='admin' %}selected{% endif %}>Admin</option>
+        </select>
+      </div>
+      <div>
+        {% if admin.role != 'owner' %}
+        <button type="button" onclick="this.closest('.admin-row').remove()" class="btn btn-danger btn-sm">✕ Remove</button>
+        {% else %}
+        <span style="color:var(--muted);font-size:.75rem">Owner</span>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+    </div>
+    <div style="display:flex;gap:.8rem;flex-wrap:wrap;margin-top:.5rem">
+      <button type="button" onclick="addAdmin()" class="btn btn-ghost">+ Add Admin</button>
+      <button class="btn btn-grad" type="submit">Save Admins</button>
+    </div>
+  </form>
+  <p style="color:var(--muted);font-size:.8rem;margin-top:.8rem">Tip: Share the name & password with Khusboo so she can login at /dashboard</p>
+</div>
+
+<!-- CHANGE PASSWORD -->
+<div class="form-section">
+  <div class="form-section-title">🔐 Change My Password</div>
+  <form method="POST" style="max-width:400px">
+    <input type="hidden" name="action" value="password"/>
+    <div class="form-group">
+      <label>Current Password</label>
+      <input type="password" name="current_password" placeholder="Enter current password"/>
+    </div>
+    <div class="form-group">
+      <label>New Password</label>
+      <input type="password" name="new_password" placeholder="At least 6 characters"/>
+    </div>
+    <div class="form-group">
+      <label>Confirm New Password</label>
+      <input type="password" name="confirm_password" placeholder="Repeat new password"/>
+    </div>
+    <button class="btn btn-grad" type="submit">Change Password</button>
+  </form>
+</div>
+
+<script>
+function addAdmin() {
+  const row = document.createElement('div');
+  row.className = 'admin-row';
+  row.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 120px auto;gap:.7rem;align-items:end;margin-bottom:.8rem;background:rgba(255,255,255,.03);padding:.8rem;border-radius:10px;border:1px solid var(--border)';
+  row.innerHTML = `
+    <div class="form-group" style="margin:0"><label style="font-size:.7rem">Name</label><input type="text" name="admin_username" placeholder="e.g. Khusboo"/></div>
+    <div class="form-group" style="margin:0"><label style="font-size:.7rem">Password</label><input type="text" name="admin_password" placeholder="Set a password"/></div>
+    <div class="form-group" style="margin:0"><label style="font-size:.7rem">Role</label><select name="admin_role"><option value="admin">Admin</option><option value="owner">Owner</option></select></div>
+    <div><button type="button" onclick="this.closest('.admin-row').remove()" class="btn btn-danger btn-sm">✕ Remove</button></div>
+  `;
+  document.getElementById('admins-list').appendChild(row);
+}
+
+function addService() {
+  const row = document.createElement('div');
+  row.className = 'svc-row';
+  row.style.cssText = 'display:grid;grid-template-columns:60px 1fr 2fr auto;gap:.7rem;align-items:start;margin-bottom:.8rem;background:rgba(255,255,255,.03);padding:.8rem;border-radius:10px;border:1px solid var(--border)';
+  row.innerHTML = `
+    <div><label style="font-size:.7rem">Icon</label><input type="text" name="svc_icon" value="⭐" style="text-align:center"/></div>
+    <div><label style="font-size:.7rem">Title</label><input type="text" name="svc_title" placeholder="Service name"/></div>
+    <div><label style="font-size:.7rem">Description</label><textarea name="svc_desc" style="min-height:60px" placeholder="What this service includes..."></textarea></div>
+    <div style="padding-top:1.5rem"><button type="button" onclick="this.closest('.svc-row').remove()" class="btn btn-danger btn-sm">✕</button></div>
+  `;
+  document.getElementById('services-list').appendChild(row);
+}
+</script>
+{% endblock %}

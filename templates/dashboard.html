@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Khusboo Creatives — Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --pink: #e91e8c; --purple: #7b2ff7; --dark: #0f0f1a; --card: #1a1a2e;
+      --text: #e0e0f0; --muted: #888aaa; --grad: linear-gradient(135deg,#e91e8c,#7b2ff7);
+    }
+    body { font-family: 'Poppins', sans-serif; background: var(--dark); color: var(--text); min-height: 100vh; }
+
+    header {
+      background: rgba(26,26,46,.9); backdrop-filter: blur(12px);
+      padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .logo { font-size: 1.3rem; font-weight: 700; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    /* LOGIN */
+    .login-wrap {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 80vh; padding: 2rem;
+    }
+    .login-card {
+      background: var(--card); border: 1px solid rgba(255,255,255,.08);
+      border-radius: 24px; padding: 2.5rem; width: 100%; max-width: 380px; text-align: center;
+    }
+    .login-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .login-card h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: .4rem; }
+    .login-card p { color: var(--muted); font-size: .9rem; margin-bottom: 1.8rem; }
+    .error-msg { background: rgba(255,82,82,.1); border: 1px solid rgba(255,82,82,.3); color: #ff5252; border-radius: 10px; padding: .6rem 1rem; font-size: .85rem; margin-bottom: 1rem; }
+    input[type=password] {
+      width: 100%; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+      border-radius: 12px; padding: .75rem 1rem; color: #fff; font-size: .95rem; font-family: inherit;
+      outline: none; margin-bottom: 1rem; transition: border-color .2s;
+    }
+    input[type=password]:focus { border-color: var(--pink); }
+    .btn-login {
+      width: 100%; background: var(--grad); color: #fff; border: none;
+      padding: .85rem; border-radius: 12px; font-size: 1rem; font-weight: 600;
+      cursor: pointer; transition: opacity .2s;
+    }
+    .btn-login:hover { opacity: .85; }
+
+    /* DASHBOARD */
+    .dash-main { padding: 2rem; max-width: 1200px; margin: 0 auto; }
+    .dash-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; }
+    .dash-title { font-size: 1.8rem; font-weight: 700; }
+    .dash-title span { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .btn-export {
+      background: var(--grad); color: #fff; border: none; padding: .6rem 1.4rem;
+      border-radius: 50px; font-size: .9rem; font-weight: 600; cursor: pointer; text-decoration: none;
+    }
+
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.2rem; margin-bottom: 2rem; }
+    .stat-card {
+      background: var(--card); border: 1px solid rgba(255,255,255,.07);
+      border-radius: 16px; padding: 1.4rem;
+    }
+    .stat-card .label { color: var(--muted); font-size: .8rem; font-weight: 500; margin-bottom: .4rem; }
+    .stat-card .value { font-size: 2rem; font-weight: 700; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    .no-leads {
+      background: var(--card); border: 1px solid rgba(255,255,255,.07);
+      border-radius: 20px; padding: 4rem; text-align: center;
+    }
+    .no-leads .icon { font-size: 3rem; margin-bottom: 1rem; }
+    .no-leads p { color: var(--muted); }
+
+    .leads-table-wrap { background: var(--card); border: 1px solid rgba(255,255,255,.07); border-radius: 20px; overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; }
+    thead { background: rgba(255,255,255,.04); }
+    th { padding: 1rem 1.2rem; text-align: left; font-size: .8rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; white-space: nowrap; }
+    td { padding: .9rem 1.2rem; font-size: .88rem; border-top: 1px solid rgba(255,255,255,.05); vertical-align: top; }
+    tr:hover td { background: rgba(255,255,255,.02); }
+    .badge-service {
+      display: inline-block; background: rgba(233,30,140,.15); color: #e91e8c;
+      border-radius: 6px; padding: .2rem .6rem; font-size: .75rem; font-weight: 500;
+    }
+    .tag-budget {
+      display: inline-block; background: rgba(123,47,247,.15); color: #a78bfa;
+      border-radius: 6px; padding: .2rem .6rem; font-size: .75rem; font-weight: 500;
+    }
+    .time { color: var(--muted); font-size: .78rem; }
+    .insta-link { color: var(--pink); text-decoration: none; }
+    .insta-link:hover { text-decoration: underline; }
+    a.back { color: var(--muted); font-size: .85rem; text-decoration: none; }
+    a.back:hover { color: var(--text); }
+  </style>
+</head>
+<body>
+<header>
+  <div class="logo">✨ Khusboo Creatives</div>
+  <a class="back" href="/">← Back to Site</a>
+</header>
+
+{% if not authenticated %}
+<div class="login-wrap">
+  <div class="login-card">
+    <div class="login-icon">🔐</div>
+    <h2>Dashboard Login</h2>
+    <p>Enter your password to view leads</p>
+    {% if error %}
+    <div class="error-msg">Wrong password. Please try again.</div>
+    {% endif %}
+    <form method="POST">
+      <input type="password" name="password" placeholder="Enter password" autofocus/>
+      <button type="submit" class="btn-login">Login →</button>
+    </form>
+  </div>
+</div>
+
+{% else %}
+<div class="dash-main">
+  <div class="dash-header">
+    <div class="dash-title">Your <span>Leads Dashboard</span></div>
+    <a class="btn-export" href="/dashboard/export?key=khusboo2024" download="leads.json">⬇ Export JSON</a>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="label">Total Leads</div>
+      <div class="value">{{ leads | length }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">This Month</div>
+      <div class="value">{{ leads | length }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Conversion Ready</div>
+      <div class="value">{{ leads | length }}</div>
+    </div>
+  </div>
+
+  {% if leads | length == 0 %}
+  <div class="no-leads">
+    <div class="icon">📭</div>
+    <h3 style="margin-bottom:.5rem">No leads yet</h3>
+    <p>Share your landing page and clients will start flowing in!</p>
+  </div>
+  {% else %}
+  <div class="leads-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Business</th>
+          <th>Contact</th>
+          <th>Instagram</th>
+          <th>Services</th>
+          <th>Budget</th>
+          <th>Pain Point</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for lead in leads | reverse %}
+        <tr>
+          <td style="color:var(--muted);font-size:.78rem">{{ lead.id or loop.index }}</td>
+          <td><strong>{{ lead.name or '—' }}</strong></td>
+          <td>{{ lead.business or '—' }}</td>
+          <td>
+            {% if lead.email %}<div>📧 {{ lead.email }}</div>{% endif %}
+            {% if lead.phone %}<div>📱 {{ lead.phone }}</div>{% endif %}
+          </td>
+          <td>
+            {% if lead.instagram and lead.instagram != '—' and lead.instagram != 'N/A' %}
+            <a class="insta-link" href="https://instagram.com/{{ lead.instagram | replace('@','') }}" target="_blank">@{{ lead.instagram | replace('@','') }}</a>
+            {% else %}—{% endif %}
+          </td>
+          <td><span class="badge-service">{{ lead.services or '—' }}</span></td>
+          <td><span class="tag-budget">{{ lead.budget or '—' }}</span></td>
+          <td style="max-width:200px;color:var(--muted);font-size:.82rem">{{ lead.pain_point or '—' }}</td>
+          <td class="time">{{ lead.timestamp or '—' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+</body>
+</html>
